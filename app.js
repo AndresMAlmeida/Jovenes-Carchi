@@ -254,7 +254,7 @@ function llenarFicha(r) {
     : `Asignado a: ${r.hojaBase}`;
   $('fHorario').textContent = r.horario || '—';
 
-  // Solo mostrar fecha de convocatoria si el joven ya está en una hoja asignada
+  // Mostrar Fecha de convocatoria únicamente a los jóvenes que ya pertenecen a una hoja asignada
   if (filaFecha) {
     if (!sinUbicacion && r.fechaConvocatoria) {
       filaFecha.style.display = 'flex';
