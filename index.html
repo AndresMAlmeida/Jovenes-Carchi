@@ -47,7 +47,6 @@
       padding-bottom: 88px;
     }
 
-    /* Encabezado */
     .app-header {
       background: var(--primary);
       color: #FFFFFF;
@@ -96,7 +95,6 @@
       color: #D7E5E1;
     }
 
-    /* Contenido */
     .app-main {
       padding: 18px 16px 24px;
       flex: 1;
@@ -110,7 +108,6 @@
       display: block;
     }
 
-    /* Pantalla 1: Búsqueda */
     .search-hero {
       text-align: center;
       padding-top: 24px;
@@ -165,7 +162,6 @@
       margin-top: 10px;
     }
 
-    /* Alertas */
     .alert {
       display: none;
       margin-top: 16px;
@@ -192,7 +188,6 @@
       border: 1px solid #CBE0D8;
     }
 
-    /* Tarjetas */
     .card {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -278,7 +273,6 @@
       color: var(--info-text);
     }
 
-    /* Formularios */
     .field {
       margin-bottom: 14px;
     }
@@ -301,3 +295,379 @@
       margin-bottom: 12px;
       line-height: 1.4;
     }
+
+    .radio-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .radio-pill {
+      position: relative;
+      cursor: pointer;
+    }
+
+    .radio-pill input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .radio-pill span {
+      display: block;
+      text-align: center;
+      padding: 12px;
+      border-radius: 12px;
+      border: 1.5px solid var(--border);
+      background: #FAFBF9;
+      font-weight: 700;
+      font-size: 15px;
+      transition: all 0.15s ease;
+    }
+
+    .radio-pill input:checked + span {
+      background: var(--info-bg);
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .select-input,
+    .text-input {
+      width: 100%;
+      padding: 12px 14px;
+      font-size: 15px;
+      color: var(--text);
+      background: #FAFBF9;
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      outline: none;
+    }
+
+    .select-input:focus,
+    .text-input:focus {
+      border-color: var(--primary);
+      background: #FFFFFF;
+    }
+
+    .photo-status {
+      font-size: 13px;
+      color: var(--muted);
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .photo-preview {
+      display: none;
+      width: 100%;
+      max-height: 280px;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-top: 12px;
+      border: 1px solid var(--border);
+    }
+
+    .photo-preview.show {
+      display: block;
+    }
+
+    .success-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 20px;
+      text-align: center;
+      margin-top: 16px;
+    }
+
+    .success-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: #E7F3ED;
+      color: var(--primary);
+      font-size: 28px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 14px;
+    }
+
+    .success-title {
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .success-detail {
+      font-size: 14.5px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .app-footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 12px 16px;
+      display: flex;
+      justify-content: center;
+      z-index: 20;
+    }
+
+    .footer-inner {
+      width: 100%;
+      max-width: 540px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 14px 18px;
+      border-radius: 12px;
+      font-size: 15.5px;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background 0.15s ease, opacity 0.15s ease;
+    }
+
+    .btn:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #FFFFFF;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: var(--primary-hover);
+    }
+
+    .btn-ghost {
+      background: #EEF1EF;
+      color: var(--text);
+      flex: 0.65;
+    }
+
+    .btn-outline {
+      width: 100%;
+      background: #FAFBF9;
+      color: var(--primary);
+      border: 1.5px dashed var(--primary);
+    }
+
+    .spinner {
+      width: 16px;
+      height: 16px;
+      border: 2.5px solid rgba(255, 255, 255, 0.35);
+      border-top-color: #FFFFFF;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="header-kicker">Jóvenes en Acción 4 · Carchi</div>
+      <h1 class="header-title" id="headerTitle">Buscar tu registro</h1>
+      <div class="step-track">
+        <span class="step-dot active" data-step="1"></span>
+        <span class="step-dot" data-step="2"></span>
+        <span class="step-dot" data-step="3"></span>
+      </div>
+      <div class="step-label" id="stepLabel">Paso 1 de 3 — Consulta tu cédula</div>
+    </header>
+
+    <main class="app-main">
+      <section class="screen active" id="screen-1">
+        <div class="search-hero">
+          <div class="search-icon">#</div>
+          <p class="search-desc">Escribe tu número de cédula para ver tu registro y subir tu evidencia.</p>
+          <input
+            type="tel"
+            id="cedulaInput"
+            class="cedula-input"
+            maxlength="10"
+            inputmode="numeric"
+            placeholder="0400000000"
+            autocomplete="off"
+          />
+          <div class="input-hint">10 dígitos, sin guiones ni espacios</div>
+          <div class="alert alert-error" id="searchError"></div>
+          <div class="alert alert-info" id="searchInfo"></div>
+        </div>
+      </section>
+
+      <section class="screen" id="screen-2">
+        <div class="card">
+          <div class="card-kicker">TU REGISTRO ACTUAL</div>
+          <h2 class="person-name" id="fName">—</h2>
+          <div class="person-id" id="fCedula">Cédula: —</div>
+          <div class="tutor-badge" id="fTutorBadge">Tutor General: —</div>
+
+          <div class="info-list">
+            <div class="info-row">
+              <span class="info-label">Cantón domicilio</span>
+              <span class="info-value" id="fCanton">—</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Hoja / Grupo en base</span>
+              <span class="info-value" id="fHoja">—</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Horario / Convocatoria</span>
+              <span class="info-value" id="fHorario">—</span>
+            </div>
+            <div class="info-row" id="rowFechaConvocatoria" style="display: none;">
+              <span class="info-label">Fecha de convocatoria</span>
+              <span class="info-value" id="fFechaConvocatoria">—</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Grupo de apoyo</span>
+              <span class="info-value" id="fGrupoApoyo">—</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Subtutor / Reasignación</span>
+              <span class="info-value" id="fSubtutorActual">—</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Cantón de ubicación</span>
+              <span class="info-value" id="fCantonUbicacionActual">—</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Estado de estudios</span>
+              <span class="info-value" id="fEstudiaActual">—</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="status-banner" id="fichaStatusBanner"></div>
+      </section>
+
+      <section class="screen" id="screen-3">
+        <div class="card" id="cardDatosEditable">
+          <div class="card-kicker">1. CONFIRMA TUS DATOS (SOLO UNA VEZ)</div>
+
+          <div class="field">
+            <label class="field-label">¿Estudias actualmente?</label>
+            <div class="radio-group" id="estudiaRadioGroup">
+              <label class="radio-pill">
+                <input type="radio" name="estudia" value="Sí" />
+                <span>Sí</span>
+              </label>
+              <label class="radio-pill">
+                <input type="radio" name="estudia" value="No" />
+                <span>No</span>
+              </label>
+            </div>
+          </div>
+
+          <div id="bloqueDondeEstudia" style="display: none;">
+            <div class="field">
+              <label class="field-label" for="dondeEstudia">¿Dónde estudias?</label>
+              <select id="dondeEstudia" class="select-input">
+                <option value="">Selecciona una opción...</option>
+                <option value="Universidad">Universidad</option>
+                <option value="Instituto">Instituto</option>
+                <option value="Colegio">Colegio</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label class="field-label" for="institucionNombre">Nombre de la institución (opcional)</label>
+              <input type="text" id="institucionNombre" class="text-input" placeholder="Ej. UPEC, IST Vicente Fierro..." />
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="subtutorReasignacion">Subtutor / Reasignación</label>
+            <select id="subtutorReasignacion" class="select-input">
+              <option value="">Selecciona tu subtutor o grupo...</option>
+            </select>
+          </div>
+
+          <div class="field" id="bloqueCantonUbicado" style="display: none;">
+            <label class="field-label" for="cantonUbicado">¿En qué cantón te encuentras ubicado actualmente?</label>
+            <select id="cantonUbicado" class="select-input">
+              <option value="">Selecciona tu cantón actual...</option>
+              <option value="Tulcán">Tulcán</option>
+              <option value="Parroquias Tulcán">Parroquias Tulcán</option>
+              <option value="San Pedro de Huaca">San Pedro de Huaca</option>
+              <option value="Montúfar">Montúfar</option>
+              <option value="Mira">Mira</option>
+              <option value="Bolívar">Bolívar</option>
+              <option value="Espejo">Espejo</option>
+              <option value="Otros Cantones">Otros Cantones</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="card" id="cardDatosBloqueado" style="display: none;">
+          <div class="card-kicker">1. DATOS YA CONFIRMADOS ✓</div>
+          <div class="info-list">
+            <div class="info-row">
+              <span class="info-label">Estudios</span>
+              <span class="info-value" id="estudiaGuardadoTexto">—</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Subtutor / Reasignación</span>
+              <span class="info-value" id="subtutorGuardadoTexto">—</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Ubicación</span>
+              <span class="info-value" id="cantonGuardadoTexto">—</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-kicker">2. EVIDENCIA FOTOGRÁFICA</div>
+          <p class="field-hint">Toma una fotografía clara de tu asistencia o actividad del día.</p>
+
+          <input type="file" id="selfieFile" accept="image/*" capture="environment" style="display: none;" />
+          <button type="button" class="btn btn-outline" id="btnCapture">Tomar o seleccionar foto</button>
+          <div class="photo-status" id="selfieStatus">Aún no se ha seleccionado la foto</div>
+          <img id="selfiePreview" class="photo-preview" alt="Vista previa de evidencia" />
+
+          <div class="field" style="margin-top: 14px;">
+            <label class="field-label" for="observacionFoto">Observación (opcional)</label>
+            <input type="text" id="observacionFoto" class="text-input" placeholder="Ej. Asistencia jornada mañana..." />
+          </div>
+        </div>
+
+        <div class="alert alert-error" id="formError"></div>
+      </section>
+
+      <section class="screen" id="screen-success">
+        <div class="success-box">
+          <div class="success-icon">✓</div>
+          <h2 class="success-title" id="successTitle">Envío completado</h2>
+          <p class="success-detail" id="successDetail">Tu registro se ha guardado correctamente.</p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="app-footer">
+      <div class="footer-inner" id="footerInner"></div>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
