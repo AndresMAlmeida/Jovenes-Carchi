@@ -128,9 +128,14 @@ function resetAll() {
   $('cantonUbicado').value = '';
   $('observacionFoto').value = '';
   $('bloqueDondeEstudia').style.display = 'none';
+  $('adminPanel').classList.remove('show');
+  $('adminNuevaHoja').value = '';
+  $('adminPin').value = '';
   hideAlert('searchError');
   hideAlert('searchInfo');
   hideAlert('formError');
+  hideAlert('adminError');
+  hideAlert('adminInfo');
   goToStep(1);
 }
 
@@ -145,6 +150,70 @@ function showAlert(id, msg) {
 function hideAlert(id) {
   $(id).classList.remove('show');
 }
+
+// ---------------------------------------------------------------
+// Panel Tutor: Traslado directo de hoja en Base Global
+// ---------------------------------------------------------------
+$('btnToggleAdmin').addEventListener('click', () => {
+  $('adminPanel').classList.toggle('show');
+  hideAlert('adminError');
+  hideAlert('adminInfo');
+});
+
+$('btnEjecutarTraslado').addEventListener('click', async () => {
+  hideAlert('adminError');
+  hideAlert('adminInfo');
+
+  const nuevaHoja = $('adminNuevaHoja').value;
+  const pin = $('adminPin').value.trim();
+
+  if (!nuevaHoja) {
+    showAlert('adminError', 'Selecciona la nueva hoja o grupo de destino.');
+    return;
+  }
+  if (!pin) {
+    showAlert('adminError', 'Ingresa el PIN de autorización de tutor.');
+    return;
+  }
+
+  const btn = $('btnEjecutarTraslado');
+  btn.disabled = true;
+  btn.textContent = 'Trasladando...';
+
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        action: 'reasignar_hoja',
+        token: TOKEN,
+        cedula: registro.cedula,
+        nuevaHoja: nuevaHoja,
+        pin: pin
+      })
+    });
+    const data = await res.json();
+
+    if (!data.ok) {
+      showAlert('adminError', data.error || 'No se pudo completar el traslado.');
+      return;
+    }
+
+    if (data.registro) {
+      registro = data.registro;
+      llenarFicha(registro);
+      configurarModoPaso3(registro);
+      renderFooter();
+    }
+    $('adminPin').value = '';
+    showAlert('adminInfo', `✓ Trasladado correctamente a "${data.hojaDestino}" en la Base Maestra y actualizado en el Libro de Evidencias.`);
+  } catch (err) {
+    showAlert('adminError', 'Error de conexión al intentar trasladar el registro.');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Trasladar en Base Maestra';
+  }
+});
 
 // ---------------------------------------------------------------
 // Poblar opciones exactas de Subtutor / Reasignación
@@ -214,6 +283,9 @@ async function onBuscar() {
 
     hideAlert('searchInfo');
     registro = data.registro;
+    $('adminPanel').classList.remove('show');
+    hideAlert('adminError');
+    hideAlert('adminInfo');
     llenarFicha(registro);
     configurarModoPaso3(registro);
     goToStep(2);
@@ -243,7 +315,6 @@ function llenarFicha(r) {
   $('fCanton').textContent = cantonMostrar;
   $('fHorario').textContent = r.horario || '—';
 
-  // Mostrar Fecha de convocatoria ÚNICAMENTE para los casos S1 o S2
   if (filaFecha) {
     if (esTulcanSem && r.fechaConvocatoria) {
       filaFecha.style.display = 'flex';
