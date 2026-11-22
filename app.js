@@ -1,7 +1,7 @@
 // ============================================================
 // CONFIGURA ESTO con la URL de tu Apps Script ya publicado
 // ============================================================
-const API_URL = 'https://script.google.com/macros/s/AKfycby9nJ5flwNPqOOHBPkfSASv8ewkQpOJETGo5Nun73RGBM0c9bU9pEPcbLHXcZQHY7Xj/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycby9nJ5fIwNPqOOHBPkfSASv8ewkQpOJETGo5Nun73RGBM0c9bU9pEPcbLHXcZQHY7Xj/exec';
 const TOKEN = 'JEA4Carchi2026';
 
 // Opciones completas de Subtutor / Reasignación (incluye hojas de la Base Maestra)
