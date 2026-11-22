@@ -271,6 +271,34 @@
       line-height: 1.45;
       background: var(--info-bg);
       color: var(--info-text);
+      margin-bottom: 14px;
+    }
+
+    .admin-toggle {
+      display: block;
+      width: 100%;
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: underline;
+      text-align: center;
+      padding: 8px;
+      cursor: pointer;
+    }
+
+    .admin-panel {
+      display: none;
+      background: #FFFDF7;
+      border: 1.5px dashed var(--accent);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-top: 8px;
+    }
+
+    .admin-panel.show {
+      display: block;
     }
 
     .field {
@@ -454,6 +482,12 @@
       background: var(--primary-hover);
     }
 
+    .btn-amber {
+      width: 100%;
+      background: var(--accent);
+      color: #1F1A0E;
+    }
+
     .btn-ghost {
       background: #EEF1EF;
       color: var(--text);
@@ -554,6 +588,42 @@
         </div>
 
         <div class="status-banner" id="fichaStatusBanner"></div>
+
+        <button type="button" class="admin-toggle" id="btnToggleAdmin">
+          ¿Mal asignado? Reasignar hoja / grupo (Solo Tutor)
+        </button>
+
+        <div class="admin-panel" id="adminPanel">
+          <div class="card-kicker" style="color: #7A4F01;">TRASLADO DE HOJA EN BASE GLOBAL</div>
+          <div class="field">
+            <label class="field-label" for="adminNuevaHoja">Mover joven a la hoja / grupo:</label>
+            <select id="adminNuevaHoja" class="select-input">
+              <option value="">Selecciona hoja de destino...</option>
+              <option value="Grupo Prioritario">Grupo Prioritario</option>
+              <option value="Fin de Semana">Fin de Semana</option>
+              <option value="Tulcán">Tulcán</option>
+              <option value="Parroquias Tulcán">Parroquias Tulcán</option>
+              <option value="San Pedro de Huaca">San Pedro de Huaca</option>
+              <option value="Montúfar">Montúfar</option>
+              <option value="Mira">Mira</option>
+              <option value="Bolívar">Bolívar</option>
+              <option value="Espejo">Espejo</option>
+              <option value="Otros Cantones">Otros Cantones</option>
+              <option value="Ximena">Ximena</option>
+              <option value="Patricio">Patricio</option>
+              <option value="No Presentados">No Presentados</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="field-label" for="adminPin">PIN de autorización (Tutor):</label>
+            <input type="password" id="adminPin" class="text-input" inputmode="numeric" placeholder="Ingresa PIN de tutor" />
+          </div>
+          <button type="button" class="btn btn-amber" id="btnEjecutarTraslado">
+            Trasladar en Base Maestra
+          </button>
+          <div class="alert alert-error" id="adminError"></div>
+          <div class="alert alert-info" id="adminInfo"></div>
+        </div>
       </section>
 
       <section class="screen" id="screen-3">
