@@ -4,30 +4,14 @@
 const API_URL = 'https://script.google.com/macros/s/AKfycby9nJ5fIwNPqOOHBPkfSASv8ewkQpOJETGo5Nun73RGBM0c9bU9pEPcbLHXcZQHY7Xj/exec';
 const TOKEN = 'JEA4Carchi2026';
 
-// Opciones completas de Subtutor / Reasignación (incluye hojas de la Base Maestra)
+// Opciones exactas de Subtutor / Reasignación
 const OPCIONES_REASIGNACION = [
-  'Tulcán',
-  'Parroquias Tulcán',
-  'San Pedro de Huaca',
-  'Montúfar',
-  'Mira',
-  'Bolívar',
-  'Espejo',
-  'Otros Cantones',
-  'Ximena',
-  'Patricio',
-  'Grupo Prioritario',
-  'Fin de Semana',
-  'A1 Ximena Rodríguez',
-  'A2 Jairo Portilla',
-  'A3 Luis Cuasapud',
-  'A4 Gabriela Montenegro',
-  'A5 Marco Chamorro',
-  'G1 Fernanda Almeida',
-  'G2 Carlos Benavides',
-  'G3 Diana Rosero',
-  'G4 Cristian Revelo',
-  'G5 Patricia Narváez'
+  'Tenencia o jefatura política',
+  'Puntos digitales',
+  'Gestión documental Ximena R',
+  'Gestión documental Patricio E',
+  'Apoyo administrativo',
+  'Apoyo comunitario'
 ];
 
 // ---- Estado ----
@@ -42,6 +26,10 @@ const $ = (id) => document.getElementById(id);
 
 function esHojaSinUbicacion(hoja) {
   return hoja === 'No Presentados' || hoja === 'Sin Cantón' || hoja === 'Sin Canton';
+}
+
+function esHojaTulcanSemanal(hoja) {
+  return /^s[12](_|\b)/i.test(String(hoja || '').trim());
 }
 
 // ---------------------------------------------------------------
@@ -159,19 +147,17 @@ function hideAlert(id) {
 }
 
 // ---------------------------------------------------------------
-// Poblar opciones de Subtutor / Reasignación con las hojas de la base
+// Poblar opciones exactas de Subtutor / Reasignación
 // ---------------------------------------------------------------
 function poblarSelectReasignacion() {
   const sel = $('subtutorReasignacion');
   if (!sel) return;
-  const actuales = Array.from(sel.options).map((o) => o.value);
+  sel.innerHTML = '<option value="">Selecciona tu subtutor o grupo...</option>';
   OPCIONES_REASIGNACION.forEach((op) => {
-    if (!actuales.includes(op)) {
-      const option = document.createElement('option');
-      option.value = op;
-      option.textContent = op;
-      sel.appendChild(option);
-    }
+    const option = document.createElement('option');
+    option.value = op;
+    option.textContent = op;
+    sel.appendChild(option);
   });
 }
 
@@ -243,20 +229,23 @@ async function onBuscar() {
 
 function llenarFicha(r) {
   const sinUbicacion = esHojaSinUbicacion(r.hojaBase);
+  const esTulcanSem = esHojaTulcanSemanal(r.hojaBase);
   const filaFecha = $('rowFechaConvocatoria');
+
+  const cantonMostrar = esTulcanSem ? 'TULCÁN' : (r.canton || '—');
+  const ubicacionMostrar = sinUbicacion
+    ? (r.cantonUbicado || 'Por confirmar')
+    : (esTulcanSem ? 'Tulcán' : (r.cantonUbicado || r.hojaBase));
 
   $('fName').textContent = r.nombre || '—';
   $('fCedula').textContent = 'Cédula: ' + (r.cedula || '—');
   $('fTutorBadge').textContent = 'Tutor General: ' + (r.tutorGeneral || 'Otros Tutores');
-  $('fCanton').textContent = r.canton || '—';
-  $('fHoja').textContent = sinUbicacion
-    ? `${r.hojaBase} (Pendiente de asignar)`
-    : `Asignado a: ${r.hojaBase}`;
+  $('fCanton').textContent = cantonMostrar;
   $('fHorario').textContent = r.horario || '—';
 
-  // Mostrar Fecha de convocatoria únicamente a los jóvenes que ya pertenecen a una hoja asignada
+  // Mostrar Fecha de convocatoria ÚNICAMENTE para los casos S1 o S2
   if (filaFecha) {
-    if (!sinUbicacion && r.fechaConvocatoria) {
+    if (esTulcanSem && r.fechaConvocatoria) {
       filaFecha.style.display = 'flex';
       $('fFechaConvocatoria').textContent = r.fechaConvocatoria;
     } else {
@@ -267,9 +256,7 @@ function llenarFicha(r) {
 
   $('fGrupoApoyo').textContent = r.grupoApoyo || '—';
   $('fSubtutorActual').textContent = r.subtutor || 'Sin asignar';
-  $('fCantonUbicacionActual').textContent = sinUbicacion
-    ? (r.cantonUbicado || 'Por confirmar')
-    : (r.cantonUbicado || r.hojaBase);
+  $('fCantonUbicacionActual').textContent = ubicacionMostrar;
   $('fEstudiaActual').textContent = r.estudia || 'Por confirmar';
 
   const banner = $('fichaStatusBanner');
@@ -281,11 +268,14 @@ function llenarFicha(r) {
     banner.style.background = '#FFF7E6';
     banner.style.color = '#7A4F01';
     banner.textContent = 'Estás en el listado de No Presentados / Sin Cantón. En el siguiente paso selecciona si estudias, tu Subtutor/Reasignación y el cantón donde te encuentras actualmente.';
-  } else {
-    const textoFecha = r.fechaConvocatoria ? ` — Convocado: ${r.fechaConvocatoria}` : '';
+  } else if (esTulcanSem && r.fechaConvocatoria) {
     banner.style.background = '#EAF1EE';
     banner.style.color = '#1B4B43';
-    banner.textContent = `Ya estás asignado a "${r.hojaBase}"${textoFecha} (${r.horario || 'grupo asignado'}). En el siguiente paso confirma si estudias, tu Subtutor/Reasignación y sube tu evidencia fotográfica.`;
+    banner.textContent = `Convocado: ${r.fechaConvocatoria} (${r.horario || 'grupo asignado'}). En el siguiente paso confirma si estudias, tu Subtutor/Reasignación y sube tu evidencia fotográfica.`;
+  } else {
+    banner.style.background = '#EAF1EE';
+    banner.style.color = '#1B4B43';
+    banner.textContent = `Asignado en ${cantonMostrar} (${r.horario || 'grupo asignado'}). En el siguiente paso confirma si estudias, tu Subtutor/Reasignación y sube tu evidencia fotográfica.`;
   }
 }
 
@@ -303,6 +293,7 @@ function configurarModoPaso3(r) {
   $('observacionFoto').value = '';
 
   const sinUbicacion = esHojaSinUbicacion(r.hojaBase);
+  const esTulcanSem = esHojaTulcanSemanal(r.hojaBase);
   const bloqueCanton = $('bloqueCantonUbicado');
 
   if (r.yaActualizo) {
@@ -310,7 +301,7 @@ function configurarModoPaso3(r) {
     $('cardDatosBloqueado').style.display = 'block';
     $('estudiaGuardadoTexto').textContent = r.estudia || 'Registrado';
     $('subtutorGuardadoTexto').textContent = r.subtutor || 'Registrado';
-    $('cantonGuardadoTexto').textContent = r.cantonUbicado || r.hojaBase || 'Registrado';
+    $('cantonGuardadoTexto').textContent = esTulcanSem ? 'Tulcán' : (r.cantonUbicado || r.hojaBase || 'Registrado');
   } else {
     $('cardDatosEditable').style.display = 'block';
     $('cardDatosBloqueado').style.display = 'none';
@@ -371,9 +362,10 @@ $('selfieFile').addEventListener('change', (e) => {
 async function onEnviar() {
   hideAlert('formError');
 
+  const esTulcanSem = esHojaTulcanSemanal(registro.hojaBase);
   let estadoEstudiaFinal = registro.estudia || '';
   let subtutorFinal = registro.subtutor || '';
-  let cantonUbicadoFinal = registro.cantonUbicado || registro.hojaBase || '';
+  let cantonUbicadoFinal = esTulcanSem ? 'Tulcán' : (registro.cantonUbicado || registro.hojaBase || '');
   let actualizarDatos = false;
 
   if (!registro.yaActualizo) {
@@ -408,7 +400,7 @@ async function onEnviar() {
         return;
       }
     } else {
-      cantonUbicadoFinal = registro.cantonUbicado || registro.hojaBase;
+      cantonUbicadoFinal = esTulcanSem ? 'Tulcán' : (registro.cantonUbicado || registro.hojaBase);
     }
 
     actualizarDatos = true;
@@ -460,7 +452,7 @@ async function onEnviar() {
     if (actualizarDatos) {
       $('successTitle').textContent = 'Cambios realizados y evidencia enviada';
       $('successDetail').textContent =
-        `Tus datos (${estadoEstudiaFinal} · ${subtutorFinal} · Ubicación: ${data.hojaDestino || cantonUbicadoFinal}) quedaron guardados y bloqueados, y tu evidencia fotográfica fue enviada a tu Tutor General.`;
+        `Tus datos (${estadoEstudiaFinal} · ${subtutorFinal} · Ubicación: ${cantonUbicadoFinal}) quedaron guardados y bloqueados, y tu evidencia fotográfica fue enviada a tu Tutor General.`;
     } else {
       $('successTitle').textContent = 'Evidencia fotográfica enviada';
       $('successDetail').textContent =
