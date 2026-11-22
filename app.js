@@ -41,7 +41,7 @@ let submitting = false;
 const $ = (id) => document.getElementById(id);
 
 function esHojaSinUbicacion(hoja) {
-  return hoja === 'No Presentados' || hoja === 'Sin Cantón';
+  return hoja === 'No Presentados' || hoja === 'Sin Cantón' || hoja === 'Sin Canton';
 }
 
 // ---------------------------------------------------------------
@@ -243,6 +243,7 @@ async function onBuscar() {
 
 function llenarFicha(r) {
   const sinUbicacion = esHojaSinUbicacion(r.hojaBase);
+  const filaFecha = $('rowFechaConvocatoria');
 
   $('fName').textContent = r.nombre || '—';
   $('fCedula').textContent = 'Cédula: ' + (r.cedula || '—');
@@ -252,6 +253,18 @@ function llenarFicha(r) {
     ? `${r.hojaBase} (Pendiente de asignar)`
     : `Asignado a: ${r.hojaBase}`;
   $('fHorario').textContent = r.horario || '—';
+
+  // Solo mostrar fecha de convocatoria si el joven ya está en una hoja asignada
+  if (filaFecha) {
+    if (!sinUbicacion && r.fechaConvocatoria) {
+      filaFecha.style.display = 'flex';
+      $('fFechaConvocatoria').textContent = r.fechaConvocatoria;
+    } else {
+      filaFecha.style.display = 'none';
+      $('fFechaConvocatoria').textContent = '—';
+    }
+  }
+
   $('fGrupoApoyo').textContent = r.grupoApoyo || '—';
   $('fSubtutorActual').textContent = r.subtutor || 'Sin asignar';
   $('fCantonUbicacionActual').textContent = sinUbicacion
@@ -269,9 +282,10 @@ function llenarFicha(r) {
     banner.style.color = '#7A4F01';
     banner.textContent = 'Estás en el listado de No Presentados / Sin Cantón. En el siguiente paso selecciona si estudias, tu Subtutor/Reasignación y el cantón donde te encuentras actualmente.';
   } else {
+    const textoFecha = r.fechaConvocatoria ? ` — Convocado: ${r.fechaConvocatoria}` : '';
     banner.style.background = '#EAF1EE';
     banner.style.color = '#1B4B43';
-    banner.textContent = `Ya estás asignado a "${r.hojaBase}" (${r.horario || 'grupo asignado'}). En el siguiente paso confirma si estudias, tu Subtutor/Reasignación y sube tu evidencia fotográfica.`;
+    banner.textContent = `Ya estás asignado a "${r.hojaBase}"${textoFecha} (${r.horario || 'grupo asignado'}). En el siguiente paso confirma si estudias, tu Subtutor/Reasignación y sube tu evidencia fotográfica.`;
   }
 }
 
@@ -289,8 +303,7 @@ function configurarModoPaso3(r) {
   $('observacionFoto').value = '';
 
   const sinUbicacion = esHojaSinUbicacion(r.hojaBase);
-  const selectCanton = $('cantonUbicado');
-  const bloqueCanton = selectCanton ? selectCanton.closest('.field') || selectCanton.parentElement : null;
+  const bloqueCanton = $('bloqueCantonUbicado');
 
   if (r.yaActualizo) {
     $('cardDatosEditable').style.display = 'none';
@@ -302,7 +315,6 @@ function configurarModoPaso3(r) {
     $('cardDatosEditable').style.display = 'block';
     $('cardDatosBloqueado').style.display = 'none';
 
-    // Solo pedir cantón de ubicación a quienes están en 'No Presentados' o 'Sin Cantón'
     if (bloqueCanton) {
       bloqueCanton.style.display = sinUbicacion ? 'block' : 'none';
     }
